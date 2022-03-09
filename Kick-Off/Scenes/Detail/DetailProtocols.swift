@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: - View Controller
 protocol DetailViewControllerProtocol: BaseViewControllerProtocol {
-    func showContentDetail(with model: ContentDetailModel)
+    func showContentDetail(with model: ContentDetailModel, htmlString: String)
 }
 
 // MARK: - Presenter
@@ -18,7 +18,6 @@ protocol DetailPresenterViewProtocol: BasePresenterViewProtocol {
     func fetchDetails()
     func tagNumbers() -> Int
     func tag(of index: Int) -> ContentsModel.Tag?
-    func contentHtmlString() -> String
 }
 
 protocol DetailPresenterInteractorProtocol: BasePresenterInteractorProtocol {

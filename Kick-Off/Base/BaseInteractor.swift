@@ -11,9 +11,9 @@ import Foundation
 class BaseInteractor {
 
     // MARK: - Properties
-    internal var networkService: NetworkService!
+    internal var networkService: NetworkServiceProtocol!
 
-    init(networkService: NetworkService?) {
+    init(networkService: NetworkServiceProtocol?) {
         if let networkService = networkService {
             self.networkService = networkService
         }

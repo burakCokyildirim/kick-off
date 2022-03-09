@@ -9,7 +9,17 @@ import Foundation
 import Alamofire
 import Kingfisher
 
-class NetworkService {
+protocol NetworkServiceProtocol: AnyObject {
+    func executeRequest<T: Decodable>(method: HTTPMethod, url: URLConvertible, parameters: [String: Any]?, headers: [String: String]?, completion: @escaping (Result<T, NetworkError>) -> Void)
+}
+
+extension NetworkServiceProtocol {
+    func executeRequest<T: Decodable>(method: HTTPMethod, url: URLConvertible, parameters: [String: Any]? = nil, headers: [String: String]? = nil, completion: @escaping (Result<T, NetworkError>) -> Void) {
+        executeRequest(method: method, url: url, parameters: parameters, headers: headers, completion: completion)
+    }
+}
+
+class NetworkService: NetworkServiceProtocol {
     static let shared = NetworkService()
 
     var reachabilityStatus: NetworkReachabilityManager.NetworkReachabilityStatus = .unknown
@@ -35,7 +45,6 @@ class NetworkService {
     }
 
     // MARK: - Methods
-
     func executeRequest<T: Decodable>(method: HTTPMethod, url: URLConvertible, parameters: [String: Any]? = nil, headers: [String: String]? = nil, completion: @escaping (Result<T, NetworkError>) -> Void) {
 
         if !isInternetAvailable() {
@@ -58,11 +67,6 @@ class NetworkService {
                 encoding: JSONEncoding.default,
                 headers: httpHeaders
             ).responseDecodable(of: T.self) { response in
-
-                if let data = response.data {
-                    print("Response: " + (String(bytes: data, encoding: .utf8) ?? "nil"))
-                }
-
                 DispatchQueue.main.async {
                     switch response.result {
                     case .success(let model):
@@ -77,7 +81,6 @@ class NetworkService {
     }
 
     // MARK: - Utils
-
     func isInternetAvailable() -> Bool {
         switch reachabilityStatus {
         case .notReachable:

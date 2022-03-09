@@ -39,29 +39,8 @@ class DetailPresenter: BasePresenter {
         viewController.hideLoading()
         viewController.showAlert(with: error.localizedDescription)
     }
-}
 
-// MARK: - Extensions
-
-// MARK: - Protocols Implemantations
-
-// MARK: View Protocol
-extension DetailPresenter: DetailPresenterViewProtocol {
-    func fetchDetails() {
-        guard let contentId = content.id else { return }
-        viewController.showLoading()
-        interactor.fetchDetails(with: contentId)
-    }
-
-    func tagNumbers() -> Int {
-        contentDetail?.tags?.count ?? 0
-    }
-
-    func tag(of index: Int) -> ContentsModel.Tag? {
-        contentDetail?.tags?[index]
-    }
-
-    func contentHtmlString() -> String {
+    private func contentHtmlString() -> String {
         var body = Node(arrayLiteral: [])
         let elements = contentDetail?.content ?? []
         for element in elements {
@@ -82,12 +61,29 @@ extension DetailPresenter: DetailPresenterViewProtocol {
     }
 }
 
+// MARK: View Protocol
+extension DetailPresenter: DetailPresenterViewProtocol {
+    func fetchDetails() {
+        guard let contentId = content.id else { return }
+        viewController.showLoading()
+        interactor.fetchDetails(with: contentId)
+    }
+
+    func tagNumbers() -> Int {
+        contentDetail?.tags?.count ?? 0
+    }
+
+    func tag(of index: Int) -> ContentsModel.Tag? {
+        contentDetail?.tags?[index]
+    }
+}
+
 // MARK: Interactor Protocol
 extension DetailPresenter: DetailPresenterInteractorProtocol {
     func loadContentDetail(with model: ContentDetailModel) {
-        viewController.hideLoading()
         contentDetail = model
-        viewController.showContentDetail(with: model)
+        let contentHtmlString = contentHtmlString()
+        viewController.showContentDetail(with: model, htmlString: contentHtmlString)
     }
 }
 

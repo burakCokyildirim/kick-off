@@ -14,7 +14,7 @@ class HomeInteractor: BaseInteractor {
     var presenter: HomePresenterInteractorProtocol!
     
     // MARK: - Initialization
-    override init(networkService: NetworkService? = nil) {
+    override init(networkService: NetworkServiceProtocol? = nil) {
         super.init(networkService: networkService)
     }
 }

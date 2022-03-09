@@ -51,11 +51,6 @@ class DetailViewController: BaseViewController {
             UINib(nibName: TagCell.className, bundle: .main),
             forCellWithReuseIdentifier: TagCell.className)
     }
-
-    private func loadWebView() {
-        let htmlString = presenter.contentHtmlString()
-        contentWebView.loadHTMLString(htmlString, baseURL: nil)
-    }
 }
 
 // MARK: - Extensions
@@ -76,9 +71,10 @@ extension DetailViewController: UICollectionViewDataSource {
 
 extension DetailViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
             self?.contentWebViewHeightConstraint.constant = webView.scrollView.contentSize.height
             self?.contentWebViewHeightConstraint.isActive = true
+            self?.hideLoading()
         }
     }
 
@@ -105,7 +101,7 @@ extension DetailViewController: WKNavigationDelegate {
 
 // MARK: - Protocol Implemantations
 extension DetailViewController: DetailViewControllerProtocol {
-    func showContentDetail(with model: ContentDetailModel) {
+    func showContentDetail(with model: ContentDetailModel, htmlString: String) {
         if let coverImageUrl = model.cover?.url {
             coverImageView.kf.setImage(with: URL(string: coverImageUrl))
         }
@@ -115,6 +111,6 @@ extension DetailViewController: DetailViewControllerProtocol {
         tagsCollectionView.layoutSubviews()
         collectionViewHeightConstraint.constant = tagsCollectionView.contentSize.height
 
-        loadWebView()
+        contentWebView.loadHTMLString(htmlString, baseURL: nil)
     }
 }

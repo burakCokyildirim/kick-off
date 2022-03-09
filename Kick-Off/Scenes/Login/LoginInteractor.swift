@@ -14,7 +14,7 @@ class LoginInteractor: BaseInteractor {
     var presenter: LoginPresenterInteractorProtocol!
     
     // MARK: - Initialization
-    override init(networkService: NetworkService? = nil) {
+    override init(networkService: NetworkServiceProtocol? = nil) {
         super.init(networkService: networkService)
     }
     
